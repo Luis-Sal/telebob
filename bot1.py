@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# pylint: disable=C0116
-# This program is dedicated to the public domain under the CC0 license.
 
 """
 Simple Bot to reply to Telegram messages.
@@ -15,6 +12,7 @@ Press Ctrl-C on the command line or send a signal to the process to stop the
 bot.
 """
 
+<<<<<<< HEAD
 #import logging
 import token
 from telegram import Update, ForceReply
@@ -24,45 +22,64 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, Callb
 #logging.basicConfig(
  #   format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
 #)
+=======
+import logging
+
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+
+# Enable logging
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                    level=logging.INFO)
+>>>>>>> 77ff3c6db3cc72b8491ae07f7b03fd50080560fa
 
 #logger = logging.getLogger(__name__)
 
 
 # Define a few command handlers. These usually take the two arguments update and
-# context.
-def start(update: Update, _: CallbackContext) -> None:
+# context. Error handlers also receive the raised TelegramError object in error.
+def start(update, context):
     """Send a message when the command /start is issued."""
-    user = update.effective_user
-    update.message.reply_markdown_v2(
-        fr'Hi {user.mention_markdown_v2()}\!',
-        reply_markup=ForceReply(selective=True),
-    )
+    update.message.reply_text('Hi!')
 
 
-def help_command(update: Update, _: CallbackContext) -> None:
+def help(update, context):
     """Send a message when the command /help is issued."""
     update.message.reply_text('Help!')
 
 
-def echo(update: Update, _: CallbackContext) -> None:
+def echo(update, context):
     """Echo the user message."""
     update.message.reply_text(update.message.text)
 
 
-def main() -> None:
+def error(update, context):
+    """Log Errors caused by Updates."""
+    logger.warning('Update "%s" caused error "%s"', update, context.error)
+
+
+def main():
     """Start the bot."""
     # Create the Updater and pass it your bot's token.
+<<<<<<< HEAD
     updater = Updater(TOKEN)
+=======
+    # Make sure to set use_context=True to use the new context based callbacks
+    # Post version 12 this will no longer be necessary
+    updater = Updater("1712365953:AAFvBbPob2dL7mdp9in8oyJOzPSYheTAwxI", use_context=True)
+>>>>>>> 77ff3c6db3cc72b8491ae07f7b03fd50080560fa
 
     # Get the dispatcher to register handlers
-    dispatcher = updater.dispatcher
+    dp = updater.dispatcher
 
     # on different commands - answer in Telegram
-    dispatcher.add_handler(CommandHandler("start", start))
-    dispatcher.add_handler(CommandHandler("help", help_command))
+    dp.add_handler(CommandHandler("start", start))
+    dp.add_handler(CommandHandler("help", help))
 
-    # on non command i.e message - echo the message on Telegram
-    dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, echo))
+    # on noncommand i.e message - echo the message on Telegram
+    dp.add_handler(MessageHandler(Filters.text, echo))
+
+    # log all errors
+    dp.add_error_handler(error)
 
     # Start the Bot
     updater.start_polling()
