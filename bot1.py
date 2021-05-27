@@ -15,17 +15,17 @@ Press Ctrl-C on the command line or send a signal to the process to stop the
 bot.
 """
 
-import logging
-
+#import logging
+import token
 from telegram import Update, ForceReply
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
 
 # Enable logging
-logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
-)
+#logging.basicConfig(
+ #   format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
+#)
 
-logger = logging.getLogger(__name__)
+#logger = logging.getLogger(__name__)
 
 
 # Define a few command handlers. These usually take the two arguments update and
@@ -52,7 +52,7 @@ def echo(update: Update, _: CallbackContext) -> None:
 def main() -> None:
     """Start the bot."""
     # Create the Updater and pass it your bot's token.
-    updater = Updater("TOKEN")
+    updater = Updater(TOKEN)
 
     # Get the dispatcher to register handlers
     dispatcher = updater.dispatcher
